@@ -1,4 +1,4 @@
-package com.example.poke_go_friends
+package com.houser.poke_go_friends
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -8,7 +8,7 @@
 PRODUCT_NAME = poke_go_friends
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.pokeGoFriends
+PRODUCT_BUNDLE_IDENTIFIER = com.houser.pokeGoFriends
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2025 com.houser. All rights reserved.
