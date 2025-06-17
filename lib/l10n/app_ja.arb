@@ -1,0 +1,7 @@
+{
+  "@@locale": "ja",
+  "helloWorld": "こんにちは、世界！",
+  "greeting": "こんにちは、{name}さん！",
+  "title": "Poke GO Friends",
+  "pluralExample": "{count, plural, one{{count}個のアイテムがあります} other{{count}個のアイテムがあります}}"
+}

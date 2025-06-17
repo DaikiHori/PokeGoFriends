@@ -1,0 +1,16 @@
+{
+  "@@locale": "en",
+  "helloWorld": "Hello, World!",
+  "greeting": "Hello, {name}!",
+  "title": "Poke GO Friends",
+  "@greeting": {
+    "description": "A welcome message with a name parameter",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John Doe"
+      }
+    }
+  },
+  "pluralExample": "{count, plural, one{You have {count} item} other{You have {count} items}}"
+}
