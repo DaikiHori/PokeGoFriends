@@ -1,3 +1,4 @@
-# poke_go_friends
+# PokeGoFriends
 Friend management app for Pokemon GO
-ポケモンGO用　フレンド管理アプリ
+
+ポケモンGO向けフレンド管理アプリ
