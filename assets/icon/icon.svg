@@ -1,0 +1,20 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="512" height="512" fill="white"/>
+    <!-- ベースの白い円形の背景 -->
+    <circle cx="256" cy="256" r="240" fill="white"/>
+
+    <!-- 抽象的な赤の要素 (右から左上へ向かうシェイプ) -->
+    <path d="M496 256 C496 140.4 371.6 45.9 256 16 C140.4 45.9 45.9 140.4 16 256 L256 256 Z" fill="#FF6B6B" opacity="0.8"/>
+
+    <!-- 抽象的な薄い赤の要素 (左から右下へ向かうシェイプ) -->
+    <path d="M16 256 C16 371.6 140.4 466.1 256 496 C371.6 466.1 466.1 371.6 496 256 L256 256 Z" fill="#FF9A9A" opacity="0.8"/>
+
+    <!-- "Poke" テキスト -->
+    <text x="256" y="230" font-family="Roboto, sans-serif" font-size="90" font-weight="bold" fill="#333333" text-anchor="middle" dominant-baseline="middle">POKE</text>
+
+    <!-- "Friends" テキスト -->
+    <text x="256" y="310" font-family="Roboto, sans-serif" font-size="80" font-weight="bold" fill="#333333" text-anchor="middle" dominant-baseline="middle">FRIENDS</text>
+
+    <!-- 外側の境界線 -->
+    <circle cx="256" cy="256" r="240" stroke="#333333" stroke-width="10" fill="none"/>
+</svg>
