@@ -3,5 +3,6 @@
   "helloWorld": "こんにちは、世界！",
   "greeting": "こんにちは、{name}さん！",
   "title": "Poke GO Friends",
+  "noFriends": "下の「＋」ボタンからフレンドを追加して下さい。",
   "pluralExample": "{count, plural, one{{count}個のアイテムがあります} other{{count}個のアイテムがあります}}"
 }

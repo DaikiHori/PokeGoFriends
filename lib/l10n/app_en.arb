@@ -3,6 +3,7 @@
   "helloWorld": "Hello, World!",
   "greeting": "Hello, {name}!",
   "title": "Poke GO Friends",
+  "noFriends": "Please add friends using the \"+\" button below.",
   "@greeting": {
     "description": "A welcome message with a name parameter",
     "placeholders": {
