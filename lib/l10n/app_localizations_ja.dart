@@ -76,7 +76,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get friendsListPageTitle => 'マイフレンド';
 
   @override
-  String get noFriendsMessage => 'まだフレンドがいません。「+」をタップして追加してください！';
+  String get noFriendsMessage => 'まだフレンドがいません。\n「+」をタップして追加してください！';
 
   @override
   String get addFriendButtonTooltip => '新しいフレンドを追加';

@@ -76,7 +76,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get friendsListPageTitle => 'My Friends';
 
   @override
-  String get noFriendsMessage => 'No friends added yet. Tap \'+\' to add one!';
+  String get noFriendsMessage =>
+      'No friends added yet.\n Tap \'+\' to add one!';
 
   @override
   String get addFriendButtonTooltip => 'Add New Friend';

@@ -19,7 +19,7 @@
     "friendContactedLabel": "Contacted",
     "friendCanContactLabel": "Can Contact",
     "friendsListPageTitle": "My Friends",
-    "noFriendsMessage": "No friends added yet. Tap '+' to add one!",
+    "noFriendsMessage": "No friends added yet.\n Tap '+' to add one!",
     "addFriendButtonTooltip": "Add New Friend",
     "deleteConfirmTitle": "Delete Friend?",
     "deleteConfirmMessage": "Are you sure you want to delete {name}?",

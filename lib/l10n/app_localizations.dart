@@ -215,7 +215,7 @@ abstract class AppLocalizations {
   /// No description provided for @noFriendsMessage.
   ///
   /// In en, this message translates to:
-  /// **'No friends added yet. Tap \'+\' to add one!'**
+  /// **'No friends added yet.\n Tap \'+\' to add one!'**
   String get noFriendsMessage;
 
   /// No description provided for @addFriendButtonTooltip.

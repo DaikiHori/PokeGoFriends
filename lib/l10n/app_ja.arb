@@ -19,7 +19,7 @@
     "friendContactedLabel": "連絡済み",
     "friendCanContactLabel": "連絡可能",
     "friendsListPageTitle": "マイフレンド",
-    "noFriendsMessage": "まだフレンドがいません。「+」をタップして追加してください！",
+    "noFriendsMessage": "まだフレンドがいません。\n「+」をタップして追加してください！",
     "addFriendButtonTooltip": "新しいフレンドを追加",
     "deleteConfirmTitle": "フレンドを削除しますか？",
     "deleteConfirmMessage": "{name}さんを削除してもよろしいですか？",
