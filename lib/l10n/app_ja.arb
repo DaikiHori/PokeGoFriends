@@ -1,8 +1,45 @@
 {
-  "@@locale": "ja",
-  "helloWorld": "こんにちは、世界！",
-  "greeting": "こんにちは、{name}さん！",
-  "title": "Poke GO Friends",
-  "noFriends": "下の「＋」ボタンからフレンドを追加して下さい。",
-  "pluralExample": "{count, plural, one{{count}個のアイテムがあります} other{{count}個のアイテムがあります}}"
+    "@@locale": "ja",
+    "helloWorld": "こんにちは、世界！",
+    "greeting": "こんにちは、{name}さん！",
+    "title": "Poke GO Friends",
+    "noFriends": "下の「＋」ボタンからフレンドを追加して下さい。",
+    "pluralExample": "{count, plural, one{{count}個のアイテムがあります} other{{count}個のアイテムがあります}}",
+    "addFriendPageTitle": "新しいフレンドを追加",
+    "editFriendPageTitle": "フレンドを編集",
+    "friendNameLabel": "名前",
+    "friendNameRequired": "名前は必須です",
+    "saveButtonText": "フレンドを保存",
+    "friendNicknameLabel": "ニックネーム",
+    "friendCampfireIdLabel": "キャンプファイアID",
+    "friendCampfireNameLabel": "キャンプファイア名",
+    "friendXAccountLabel": "X (旧Twitter) アカウント",
+    "friendLineNameLabel": "LINE名",
+    "friendIsLuckyLabel": "キラ",
+    "friendContactedLabel": "連絡済み",
+    "friendCanContactLabel": "連絡可能",
+    "friendsListPageTitle": "マイフレンド",
+    "noFriendsMessage": "まだフレンドがいません。「+」をタップして追加してください！",
+    "addFriendButtonTooltip": "新しいフレンドを追加",
+    "deleteConfirmTitle": "フレンドを削除しますか？",
+    "deleteConfirmMessage": "{name}さんを削除してもよろしいですか？",
+    "@deleteConfirmMessage": {
+     "placeholders": {
+       "name": {
+         "type": "String",
+         "example": "山田太郎"
+       }
+     }
+    },
+    "cancelButtonText": "キャンセル",
+    "deleteButtonText": "削除",
+    "friendDeletedMessage": "{name}さんを削除しました。",
+    "@friendDeletedMessage": {
+     "placeholders": {
+       "name": {
+         "type": "String",
+         "example": "山田太郎"
+       }
+     }
+    }
 }

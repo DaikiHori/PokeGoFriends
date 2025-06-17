@@ -1,17 +1,45 @@
 {
-  "@@locale": "en",
-  "helloWorld": "Hello, World!",
-  "greeting": "Hello, {name}!",
-  "title": "Poke GO Friends",
-  "noFriends": "Please add friends using the \"+\" button below.",
-  "@greeting": {
-    "description": "A welcome message with a name parameter",
+    "@@locale": "en",
+    "helloWorld": "Hello, World!",
+    "greeting": "Hello, {name}!",
+    "title": "Poke GO Friends",
+    "noFriends": "Please add friends using the \"+\" button below.",
+    "pluralExample": "{count, plural, one{You have {count} item} other{You have {count} items}}",
+    "addFriendPageTitle": "Add New Friend",
+    "editFriendPageTitle": "Edit Friend",
+    "friendNameLabel": "Name",
+    "friendNameRequired": "Name cannot be empty",
+    "saveButtonText": "Save Friend",
+    "friendNicknameLabel": "Nickname",
+    "friendCampfireIdLabel": "Campfire ID",
+    "friendCampfireNameLabel": "Campfire Name",
+    "friendXAccountLabel": "X (Twitter) Account",
+    "friendLineNameLabel": "LINE Name",
+    "friendIsLuckyLabel": "Is Lucky?",
+    "friendContactedLabel": "Contacted",
+    "friendCanContactLabel": "Can Contact",
+    "friendsListPageTitle": "My Friends",
+    "noFriendsMessage": "No friends added yet. Tap '+' to add one!",
+    "addFriendButtonTooltip": "Add New Friend",
+    "deleteConfirmTitle": "Delete Friend?",
+    "deleteConfirmMessage": "Are you sure you want to delete {name}?",
+    "@deleteConfirmMessage": {
     "placeholders": {
       "name": {
         "type": "String",
         "example": "John Doe"
       }
     }
-  },
-  "pluralExample": "{count, plural, one{You have {count} item} other{You have {count} items}}"
+    },
+    "cancelButtonText": "Cancel",
+    "deleteButtonText": "Delete",
+    "friendDeletedMessage": "Friend \"{name}\" deleted.",
+    "@friendDeletedMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John Doe"
+      }
+    }
+  }
 }
