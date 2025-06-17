@@ -5,6 +5,7 @@ import '../database/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../models/friend.dart';      // Friendモデルクラスをインポート
 import 'package:poke_go_friends/screens/add_friend_page.dart'; // AddFriendPageへ遷移するため
+import 'package:url_launcher/url_launcher.dart'; // URLを開くためのパッケージ
 
 // FriendsListPageは、データベースから友達のリストを表示するためのステートフルウィジェットです。
 class FriendsListPage extends StatefulWidget {
@@ -93,6 +94,17 @@ class _FriendsListPageState extends State<FriendsListPage> {
     }
   }
 
+  // URLをブラウザで開くためのヘルパーメソッド
+  Future<void> _launchUrl(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    if (!await launchUrl(url)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not launch $urlString')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
@@ -117,32 +129,43 @@ class _FriendsListPageState extends State<FriendsListPage> {
               contentPadding: const EdgeInsets.all(16.0),
               title: Text(
                 friend.name,
-                style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                style:  TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  // luckyが1なら黄色、そうでなければデフォルトの色
+                  color: friend.lucky == 1 ? Colors.orange : null,
+                ),
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (friend.nickname != null && friend.nickname!.isNotEmpty)
-                    Text('${localizations.friendNicknameLabel}: ${friend.nickname!}'),
-                  // 以下、他の連絡先情報などを表示
                   if (friend.campfireName != null && friend.campfireName!.isNotEmpty)
-                    Text('${localizations.friendCampfireNameLabel}: ${friend.campfireName!}'),
+                    Text(
+                      '${localizations.friendCampfireNameLabel}: ${friend.campfireName!}',
+                      style:  TextStyle(
+                        // contactedが1なら青、そうでなければデフォルトの色
+                        color: friend.contacted == 1 ? Colors.lightGreen : null,
+                      ),
+                    ),
+
                   if (friend.xAccount != null && friend.xAccount!.isNotEmpty)
-                    Text('${localizations.friendXAccountLabel}: ${friend.xAccount!}'),
-                  if (friend.lineName != null && friend.lineName!.isNotEmpty)
-                    Text('${localizations.friendLineNameLabel}: ${friend.lineName!}'),
+                    GestureDetector( // GestureDetectorでタップ検出
+                      onTap: () {
+                        // XのアカウントページURLを構築して開く
+                        _launchUrl('https://x.com/${friend.xAccount!}');
+                      },
+                      child: Text(
+                        '${localizations.friendXAccountLabel}: ${friend.xAccount!}',
+                        style: const TextStyle(
+                          color: Colors.blue, // リンクのように青色にする
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   Row(
                     children: [
-                      if (friend.lucky == 1)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Icon(Icons.star, color: Colors.amber, size: 20),
-                        ),
                       if (friend.contacted == 1)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Icon(Icons.check_circle, color: Colors.green, size: 20),
-                        ),
+                        Icon(Icons.check_circle, color: Colors.green, size: 20),
                       if (friend.canContact == 1)
                         Icon(Icons.phone_in_talk, color: Colors.blue, size: 20),
                     ],
