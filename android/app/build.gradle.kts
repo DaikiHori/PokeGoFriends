@@ -29,7 +29,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.houser.poke_go_friends"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

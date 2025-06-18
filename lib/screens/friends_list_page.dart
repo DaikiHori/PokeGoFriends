@@ -127,14 +127,32 @@ class _FriendsListPageState extends State<FriendsListPage> {
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
             child: ListTile(
               contentPadding: const EdgeInsets.all(16.0),
-              title: Text(
-                friend.name,
-                style:  TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  // luckyが1なら黄色、そうでなければデフォルトの色
-                  color: friend.lucky == 1 ? Colors.orange : null,
-                ),
+              title: Row(
+                mainAxisSize: MainAxisSize.min, // Rowの幅を子ウィジェットに合わせて最小限にする
+                children: [
+                  Flexible( // Textが長くなってもIconを押し出さないようにFlexibleで囲む
+                    child: Text(
+                      friend.name,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        // luckyが1ならオレンジ色、そうでなければデフォルトの色
+                        color: friend.lucky == 1 ? Colors.orange : null,
+                      ),
+                      overflow: TextOverflow.ellipsis, // テキストが長すぎる場合は省略記号を表示
+                    ),
+                  ),
+                  const SizedBox(width: 8.0), // 名前とアイコンの間にスペースを追加
+                  // contactedアイコン
+                  if (friend.contacted == 1)
+                    const Padding(
+                      padding: EdgeInsets.only(right: 4.0),
+                      child: Icon(Icons.check_circle, color: Colors.green, size: 18),
+                    ),
+                  // canContactアイコン
+                  if (friend.canContact == 1)
+                    const Icon(Icons.phone_in_talk, color: Colors.blue, size: 18),
+                ],
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,14 +180,6 @@ class _FriendsListPageState extends State<FriendsListPage> {
                         ),
                       ),
                     ),
-                  Row(
-                    children: [
-                      if (friend.contacted == 1)
-                        Icon(Icons.check_circle, color: Colors.green, size: 20),
-                      if (friend.canContact == 1)
-                        Icon(Icons.phone_in_talk, color: Colors.blue, size: 20),
-                    ],
-                  ),
                 ],
               ),
               trailing: IconButton(
