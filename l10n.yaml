@@ -1,0 +1,6 @@
+# l10n.yaml
+arb-dir: lib/l10n  # arb ファイルを置くディレクトリ
+template-arb-file: app_en.arb # テンプレートとして使用する arb ファイル (通常はデフォルト言語)
+output-localization-file: app_localizations.dart # 生成される Dart ファイル名
+nullable-getter: false # ゲッターがnullを返すことを許容するか（通常はfalse）
+output-class: AppLocalizations # 生成されるクラス名
