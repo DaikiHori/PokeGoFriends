@@ -1,45 +1,51 @@
 {
-    "@@locale": "en",
-    "helloWorld": "Hello, World!",
-    "greeting": "Hello, {name}!",
-    "title": "Poke GO Friends",
-    "noFriends": "Please add friends using the \"+\" button below.",
-    "pluralExample": "{count, plural, one{You have {count} item} other{You have {count} items}}",
-    "addFriendPageTitle": "Add New Friend",
-    "editFriendPageTitle": "Edit Friend",
-    "friendNameLabel": "Name",
-    "friendNameRequired": "Name cannot be empty",
-    "saveButtonText": "Save Friend",
-    "friendNicknameLabel": "Nickname",
-    "friendCampfireIdLabel": "Campfire ID",
-    "friendCampfireNameLabel": "Campfire Name",
-    "friendXAccountLabel": "X (Twitter) Account",
-    "friendLineNameLabel": "LINE Name",
-    "friendIsLuckyLabel": "Is Lucky?",
-    "friendContactedLabel": "Contacted",
-    "friendCanContactLabel": "Can Contact",
-    "friendsListPageTitle": "My Friends",
-    "noFriendsMessage": "No friends added yet.\n Tap '+' to add one!",
-    "addFriendButtonTooltip": "Add New Friend",
-    "deleteConfirmTitle": "Delete Friend?",
-    "deleteConfirmMessage": "Are you sure you want to delete {name}?",
-    "@deleteConfirmMessage": {
+  "@@locale": "en",
+  "helloWorld": "Hello, World!",
+  "greeting": "Hello, {name}!",
+  "title": "Poke GO Friends",
+  "noFriends": "Please add friends using the \"+\" button below.",
+  "pluralExample": "{count, plural, one{You have {count} item} other{You have {count} items}}",
+  "addFriendPageTitle": "Add New Friend",
+  "editFriendPageTitle": "Edit Friend",
+  "friendNameLabel": "Name",
+  "friendNameRequired": "Name cannot be empty",
+  "saveButtonText": "Save Friend",
+  "friendNicknameLabel": "Nickname",
+  "friendCampfireIdLabel": "Campfire ID",
+  "friendCampfireNameLabel": "Campfire Name",
+  "friendXAccountLabel": "X (Twitter) Account",
+  "friendLineNameLabel": "LINE Name",
+  "friendIsLuckyLabel": "Is Lucky?",
+  "friendContactedLabel": "Contacted",
+  "friendCanContactLabel": "Can Contact",
+  "friendsListPageTitle": "My Friends",
+  "noFriendsMessage": "No friends added yet.\n Tap '+' to add one!",
+  "addFriendButtonTooltip": "Add New Friend",
+  "deleteConfirmTitle": "Delete Friend?",
+  "deleteConfirmMessage": "Are you sure you want to delete {name}?",
+  "@deleteConfirmMessage": {
     "placeholders": {
       "name": {
         "type": "String",
         "example": "John Doe"
       }
     }
-    },
-    "cancelButtonText": "Cancel",
-    "deleteButtonText": "Delete",
-    "friendDeletedMessage": "Friend \"{name}\" deleted.",
-    "@friendDeletedMessage": {
+  },
+  "cancelButtonText": "Cancel",
+  "deleteButtonText": "Delete",
+  "friendDeletedMessage": "Friend \"{name}\" deleted.",
+  "@friendDeletedMessage": {
     "placeholders": {
       "name": {
         "type": "String",
         "example": "John Doe"
       }
     }
-  }
+  },
+  "searchByNameLabel": "Search by Name",
+  "filterByLuckyLabel": "Filter by Lucky Status",
+  "luckyFilterAll": "All",
+  "luckyFilterLuckyOnly": "Lucky",
+  "luckyFilterNotLucky": "Not",
+  "noMatchingFriendsMessage": "No matching friends found."
 }

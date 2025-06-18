@@ -99,4 +99,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String friendDeletedMessage(String name) {
     return '$nameさんを削除しました。';
   }
+
+  @override
+  String get searchByNameLabel => '名前で検索';
+
+  @override
+  String get filterByLuckyLabel => 'キラで絞り込み';
+
+  @override
+  String get luckyFilterAll => 'すべて';
+
+  @override
+  String get luckyFilterLuckyOnly => 'キラ';
+
+  @override
+  String get luckyFilterNotLucky => '!キラ';
+
+  @override
+  String get noMatchingFriendsMessage => '該当する友達が見つかりませんでした。';
 }

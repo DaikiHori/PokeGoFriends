@@ -100,4 +100,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String friendDeletedMessage(String name) {
     return 'Friend \"$name\" deleted.';
   }
+
+  @override
+  String get searchByNameLabel => 'Search by Name';
+
+  @override
+  String get filterByLuckyLabel => 'Filter by Lucky Status';
+
+  @override
+  String get luckyFilterAll => 'All';
+
+  @override
+  String get luckyFilterLuckyOnly => 'Lucky';
+
+  @override
+  String get luckyFilterNotLucky => 'Not';
+
+  @override
+  String get noMatchingFriendsMessage => 'No matching friends found.';
 }

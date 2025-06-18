@@ -253,6 +253,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Friend \"{name}\" deleted.'**
   String friendDeletedMessage(String name);
+
+  /// No description provided for @searchByNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by Name'**
+  String get searchByNameLabel;
+
+  /// No description provided for @filterByLuckyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by Lucky Status'**
+  String get filterByLuckyLabel;
+
+  /// No description provided for @luckyFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get luckyFilterAll;
+
+  /// No description provided for @luckyFilterLuckyOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Lucky'**
+  String get luckyFilterLuckyOnly;
+
+  /// No description provided for @luckyFilterNotLucky.
+  ///
+  /// In en, this message translates to:
+  /// **'Not'**
+  String get luckyFilterNotLucky;
+
+  /// No description provided for @noMatchingFriendsMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching friends found.'**
+  String get noMatchingFriendsMessage;
 }
 
 class _AppLocalizationsDelegate

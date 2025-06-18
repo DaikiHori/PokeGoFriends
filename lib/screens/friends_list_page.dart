@@ -3,10 +3,16 @@
 import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../l10n/app_localizations.dart';
-import '../models/friend.dart';      // Friendモデルクラスをインポート
+import '../models/friend.dart'; // Friendモデルクラスをインポート
 import 'package:poke_go_friends/screens/add_friend_page.dart'; // AddFriendPageへ遷移するため
 import 'package:url_launcher/url_launcher.dart'; // URLを開くためのパッケージ
 
+// luckyによるフィルタリングの状態を定義するenum
+enum LuckyFilter {
+  all, // 全ての友達
+  luckyOnly, // luckyが1の友達のみ
+  notLucky // luckyが0の友達のみ
+}
 // FriendsListPageは、データベースから友達のリストを表示するためのステートフルウィジェットです。
 class FriendsListPage extends StatefulWidget {
   const FriendsListPage({super.key});
@@ -16,8 +22,18 @@ class FriendsListPage extends StatefulWidget {
 }
 
 class _FriendsListPageState extends State<FriendsListPage> {
-  // 友達のリストを保持する変数
+  // 友達の全リスト（フィルタリング前）
   List<Friend> _friends = [];
+
+  // フィルタリング後の表示用リスト
+  List<Friend> _filteredFriends = [];
+
+  // 検索バーのテキスト入力用コントローラー
+  final TextEditingController _searchController = TextEditingController();
+
+  // 選択されているluckyフィルタ
+  LuckyFilter _selectedLuckyFilter = LuckyFilter.all;
+
   // データがロード中かどうかを示すフラグ
   bool _isLoading = true;
 
@@ -25,6 +41,17 @@ class _FriendsListPageState extends State<FriendsListPage> {
   void initState() {
     super.initState();
     _loadFriends(); // ウィジェットが初期化されたときに友達のリストをロード
+
+    // 検索テキストの変更をリッスンし、フィルタリングを再実行
+    _searchController.addListener(() {
+      _filterFriends();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose(); // コントローラーを破棄
+    super.dispose();
   }
 
   // データベースから友達のリストをロードする非同期メソッド
@@ -39,6 +66,7 @@ class _FriendsListPageState extends State<FriendsListPage> {
         _friends = loadedFriends; // 取得したリストを更新
         _isLoading = false; // ロード完了
       });
+      _filterFriends(); // データロード後、初期フィルタリングを実行
     } catch (e) {
       // エラー処理
       if (!mounted) return;
@@ -81,7 +109,8 @@ class _FriendsListPageState extends State<FriendsListPage> {
         // 削除成功時のフィードバック
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context).friendDeletedMessage(name))),
+          SnackBar(content: Text(
+              AppLocalizations.of(context).friendDeletedMessage(name))),
         );
         _loadFriends(); // リストを再ロードしてUIを更新
       } catch (e) {
@@ -105,6 +134,30 @@ class _FriendsListPageState extends State<FriendsListPage> {
     }
   }
 
+  // 友達リストをフィルタリングするメソッド
+  void _filterFriends() {
+    final String searchText = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredFriends = _friends.where((friend) {
+        // 名前によるフィルタリング
+        final bool nameMatches = searchText.isEmpty ||
+            friend.name.toLowerCase().contains(searchText);
+
+        // luckyフィルタによるフィルタリング
+        final bool luckyMatches;
+        if (_selectedLuckyFilter == LuckyFilter.luckyOnly) {
+          luckyMatches = friend.lucky == 1;
+        } else if (_selectedLuckyFilter == LuckyFilter.notLucky) {
+          luckyMatches = friend.lucky == 0;
+        } else {
+          luckyMatches = true; // LuckyFilter.all の場合
+        }
+
+        return nameMatches && luckyMatches;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
@@ -114,17 +167,21 @@ class _FriendsListPageState extends State<FriendsListPage> {
         title: Text(localizations.friendsListPageTitle), // ページのタイトル
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator()) // ロード中はプログレスインジケータを表示
-          : _friends.isEmpty
-          ? Center(child: Text(localizations.noFriendsMessage)) // 友達がいない場合のメッセージ
+          ? const Center(
+          child: CircularProgressIndicator()) // ロード中はプログレスインジケータを表示
+          : _filteredFriends.isEmpty
+          ? Center(
+          child: Text(localizations.noMatchingFriendsMessage)) // 友達がいない場合のメッセージ
           : ListView.builder(
-        itemCount: _friends.length,
+        itemCount: _filteredFriends.length, // フィルタリング後のリストの件数を使用
         itemBuilder: (context, index) {
-          final friend = _friends[index];
+          final friend = _filteredFriends[index];
           return Card( // 各友達をカードで表示
-            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            margin: const EdgeInsets.symmetric(
+                horizontal: 16.0, vertical: 8.0),
             elevation: 4.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
             child: ListTile(
               contentPadding: const EdgeInsets.all(16.0),
               title: Row(
@@ -147,22 +204,28 @@ class _FriendsListPageState extends State<FriendsListPage> {
                   if (friend.contacted == 1)
                     const Padding(
                       padding: EdgeInsets.only(right: 4.0),
-                      child: Icon(Icons.check_circle, color: Colors.green, size: 18),
+                      child: Icon(Icons.check_circle, color: Colors.green,
+                          size: 18),
                     ),
                   // canContactアイコン
                   if (friend.canContact == 1)
-                    const Icon(Icons.phone_in_talk, color: Colors.blue, size: 18),
+                    const Icon(
+                        Icons.phone_in_talk, color: Colors.blue, size: 18),
                 ],
               ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (friend.campfireName != null && friend.campfireName!.isNotEmpty)
+                  if (friend.campfireName != null &&
+                      friend.campfireName!.isNotEmpty)
                     Text(
-                      '${localizations.friendCampfireNameLabel}: ${friend.campfireName!}',
-                      style:  TextStyle(
+                      '${localizations.friendCampfireNameLabel}: ${friend
+                          .campfireName!}',
+                      style: TextStyle(
                         // contactedが1なら青、そうでなければデフォルトの色
-                        color: friend.contacted == 1 ? Colors.lightGreen : null,
+                        color: friend.contacted == 1
+                            ? Colors.lightGreen
+                            : null,
                       ),
                     ),
 
@@ -173,7 +236,8 @@ class _FriendsListPageState extends State<FriendsListPage> {
                         _launchUrl('https://x.com/${friend.xAccount!}');
                       },
                       child: Text(
-                        '${localizations.friendXAccountLabel}: ${friend.xAccount!}',
+                        '${localizations.friendXAccountLabel}: ${friend
+                            .xAccount!}',
                         style: const TextStyle(
                           color: Colors.blue, // リンクのように青色にする
                           fontWeight: FontWeight.bold,
@@ -184,7 +248,8 @@ class _FriendsListPageState extends State<FriendsListPage> {
               ),
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () => _deleteFriend(friend.id!, friend.name), // 削除ボタン
+                onPressed: () =>
+                    _deleteFriend(friend.id!, friend.name), // 削除ボタン
               ),
               onTap: () async {
                 // 友達の詳細/編集ページへ遷移 (Friendオブジェクトを渡す)
@@ -216,6 +281,87 @@ class _FriendsListPageState extends State<FriendsListPage> {
         },
         tooltip: localizations.addFriendButtonTooltip,
         child: const Icon(Icons.add),
+      ),
+      // 検索バーを最下部に固定
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Theme
+              .of(context)
+              .cardColor, // カードの背景色に合わせる
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, -3), // 上部に影をつける
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // 高さを内容に合わせる
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: localizations.searchByNameLabel, // 検索バーのラベル
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
+                prefixIcon: const Icon(Icons.search), // 検索アイコン
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            Text(localizations.filterByLuckyLabel, style: Theme
+                .of(context)
+                .textTheme
+                .titleSmall), // ラジオボタンのタイトル
+            Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<LuckyFilter>(
+                    title: Text(localizations.luckyFilterAll),
+                    value: LuckyFilter.all,
+                    groupValue: _selectedLuckyFilter,
+                    onChanged: (LuckyFilter? value) {
+                      setState(() {
+                        _selectedLuckyFilter = value!;
+                        _filterFriends(); // ラジオボタン変更でフィルタリングを再実行
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: RadioListTile<LuckyFilter>(
+                    title: Text(localizations.luckyFilterLuckyOnly),
+                    value: LuckyFilter.luckyOnly,
+                    groupValue: _selectedLuckyFilter,
+                    onChanged: (LuckyFilter? value) {
+                      setState(() {
+                        _selectedLuckyFilter = value!;
+                        _filterFriends();
+                      });
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: RadioListTile<LuckyFilter>(
+                    title: Text(localizations.luckyFilterNotLucky),
+                    value: LuckyFilter.notLucky,
+                    groupValue: _selectedLuckyFilter,
+                    onChanged: (LuckyFilter? value) {
+                      setState(() {
+                        _selectedLuckyFilter = value!;
+                        _filterFriends();
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
