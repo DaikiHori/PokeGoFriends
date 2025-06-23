@@ -4,15 +4,10 @@ import 'package:flutter/material.dart';
 import '../database/database_helper.dart';
 import '../l10n/app_localizations.dart';
 import '../models/friend.dart'; // Friendモデルクラスをインポート
+import '../widgets/filter_toggle_button.dart';
 import 'package:poke_go_friends/screens/add_friend_page.dart'; // AddFriendPageへ遷移するため
 import 'package:url_launcher/url_launcher.dart'; // URLを開くためのパッケージ
 
-// luckyによるフィルタリングの状態を定義するenum
-enum LuckyFilter {
-  all, // 全ての友達
-  luckyOnly, // luckyが1の友達のみ
-  notLucky // luckyが0の友達のみ
-}
 // FriendsListPageは、データベースから友達のリストを表示するためのステートフルウィジェットです。
 class FriendsListPage extends StatefulWidget {
   const FriendsListPage({super.key});
@@ -30,9 +25,10 @@ class _FriendsListPageState extends State<FriendsListPage> {
 
   // 検索バーのテキスト入力用コントローラー
   final TextEditingController _searchController = TextEditingController();
-
-  // 選択されているluckyフィルタ
-  LuckyFilter _selectedLuckyFilter = LuckyFilter.all;
+  // 各フィルターの状態を管理するインデックス (0:All, 1:Only/Yes, 2:Not/No)
+  int _luckyFilterStateIndex = 0;
+  int _contactedFilterStateIndex = 0;
+  int _canContactFilterStateIndex = 0;
 
   // データがロード中かどうかを示すフラグ
   bool _isLoading = true;
@@ -145,15 +141,34 @@ class _FriendsListPageState extends State<FriendsListPage> {
 
         // luckyフィルタによるフィルタリング
         final bool luckyMatches;
-        if (_selectedLuckyFilter == LuckyFilter.luckyOnly) {
+        if (_luckyFilterStateIndex == 1) {
           luckyMatches = friend.lucky == 1;
-        } else if (_selectedLuckyFilter == LuckyFilter.notLucky) {
+        } else if (_luckyFilterStateIndex == 2) {
           luckyMatches = friend.lucky == 0;
         } else {
           luckyMatches = true; // LuckyFilter.all の場合
         }
 
-        return nameMatches && luckyMatches;
+        // contactedフィルタリングロジック
+        final bool contactedMatches;
+        if (_contactedFilterStateIndex == 1) { // 1: Contacted
+          contactedMatches = friend.contacted == 1;
+        } else if (_contactedFilterStateIndex == 2) { // 2: Not Contacted
+          contactedMatches = friend.contacted == 0;
+        } else { // 0: All
+          contactedMatches = true;
+        }
+
+        // canContactフィルタリングロジック
+        final bool canContactMatches;
+        if (_canContactFilterStateIndex == 1) { // 1: Can Contact
+          canContactMatches = friend.canContact == 1;
+        } else if (_canContactFilterStateIndex == 2) { // 2: Cannot Contact
+          canContactMatches = friend.canContact == 0;
+        } else { // 0: All
+          canContactMatches = true;
+        }
+        return nameMatches && luckyMatches && contactedMatches && canContactMatches;
       }).toList();
     });
   }
@@ -312,51 +327,87 @@ class _FriendsListPageState extends State<FriendsListPage> {
                 prefixIcon: const Icon(Icons.search), // 検索アイコン
               ),
             ),
-            const SizedBox(height: 12.0),
-            Text(localizations.filterByLuckyLabel, style: Theme
-                .of(context)
-                .textTheme
-                .titleSmall), // ラジオボタンのタイトル
+            const SizedBox(height: 14.0),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround, // ボタンを均等に配置
               children: [
-                Expanded(
-                  child: RadioListTile<LuckyFilter>(
-                    title: Text(localizations.luckyFilterAll),
-                    value: LuckyFilter.all,
-                    groupValue: _selectedLuckyFilter,
-                    onChanged: (LuckyFilter? value) {
-                      setState(() {
-                        _selectedLuckyFilter = value!;
-                        _filterFriends(); // ラジオボタン変更でフィルタリングを再実行
-                      });
-                    },
-                  ),
+                // Luckyフィルター用のトグルボタン
+                FilterToggleButton(
+                  // アイコンリストを渡す
+                  icons: const [
+                    Icons.star, // All
+                    Icons.star,        // Lucky Only
+                    Icons.star_border, // Not Lucky
+                  ],
+                  backgroundColors: const [
+                    Colors.grey,
+                    Colors.orange,
+                    Colors.blueGrey,
+                  ],
+                  iconColors: const [
+                    Colors.black,
+                    Colors.white,
+                    Colors.white,
+                  ],
+                  initialIndex: _luckyFilterStateIndex,
+                  onChanged: (newIndex) {
+                    setState(() {
+                      _luckyFilterStateIndex = newIndex;
+                      _filterFriends();
+                    });
+                  },
                 ),
-                Expanded(
-                  child: RadioListTile<LuckyFilter>(
-                    title: Text(localizations.luckyFilterLuckyOnly),
-                    value: LuckyFilter.luckyOnly,
-                    groupValue: _selectedLuckyFilter,
-                    onChanged: (LuckyFilter? value) {
-                      setState(() {
-                        _selectedLuckyFilter = value!;
-                        _filterFriends();
-                      });
-                    },
-                  ),
+                // Contactedフィルター用のトグルボタン
+                FilterToggleButton(
+                  // アイコンリストを渡す
+                  icons: const [
+                    Icons.check, // All
+                    Icons.check,       // Contacted
+                    Icons.close,       // Not Contacted
+                  ],
+                  backgroundColors: const [
+                    Colors.grey,
+                    Colors.green,
+                    Colors.red,
+                  ],
+                  iconColors: const [
+                    Colors.black,
+                    Colors.white,
+                    Colors.white,
+                  ],
+                  initialIndex: _contactedFilterStateIndex,
+                  onChanged: (newIndex) {
+                    setState(() {
+                      _contactedFilterStateIndex = newIndex;
+                      _filterFriends();
+                    });
+                  },
                 ),
-                Expanded(
-                  child: RadioListTile<LuckyFilter>(
-                    title: Text(localizations.luckyFilterNotLucky),
-                    value: LuckyFilter.notLucky,
-                    groupValue: _selectedLuckyFilter,
-                    onChanged: (LuckyFilter? value) {
-                      setState(() {
-                        _selectedLuckyFilter = value!;
-                        _filterFriends();
-                      });
-                    },
-                  ),
+                // CanContactフィルター用のトグルボタン
+                FilterToggleButton(
+                  // アイコンリストを渡す
+                  icons: const [
+                    Icons.phone_in_talk,   // All
+                    Icons.phone_in_talk, // Can Contact
+                    Icons.phone_disabled, // Cannot Contact
+                  ],
+                  backgroundColors: const [
+                    Colors.grey,
+                    Colors.blue,
+                    Colors.deepOrange,
+                  ],
+                  iconColors: const [
+                    Colors.black,
+                    Colors.white,
+                    Colors.white,
+                  ],
+                  initialIndex: _canContactFilterStateIndex,
+                  onChanged: (newIndex) {
+                    setState(() {
+                      _canContactFilterStateIndex = newIndex;
+                      _filterFriends();
+                    });
+                  },
                 ),
               ],
             ),
