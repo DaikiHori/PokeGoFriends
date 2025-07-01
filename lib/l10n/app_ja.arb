@@ -47,5 +47,15 @@
   "luckyFilterAll": "すべて",
   "luckyFilterLuckyOnly": "キラ",
   "luckyFilterNotLucky": "!キラ",
-  "noMatchingFriendsMessage": "該当する友達が見つかりませんでした。"
+  "noMatchingFriendsMessage": "該当する友達が見つかりませんでした。",
+  "ocrFromCameraTooltip": "カメラからOCR",
+  "ocrFromGalleryTooltip": "ギャラリーからOCR",
+  "ocrResultDialogTitle": "OCR結果",
+  "noTextRecognized": "テキストが認識されませんでした。",
+  "selectTextPrompt": "認識されたテキストをタップして選択してください。",
+  "closeButtonText": "閉じる",
+  "permissionDeniedMessage": "権限が拒否されました。カメラ/ギャラリーへのアクセスを許可してください。",
+  "imagePickingCancelled": "画像の選択がキャンセルされました。",
+  "textRecognitionFailed": "テキスト認識に失敗しました: {error}"
+
 }

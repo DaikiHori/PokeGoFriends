@@ -117,4 +117,33 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get noMatchingFriendsMessage => '該当する友達が見つかりませんでした。';
+
+  @override
+  String get ocrFromCameraTooltip => 'カメラからOCR';
+
+  @override
+  String get ocrFromGalleryTooltip => 'ギャラリーからOCR';
+
+  @override
+  String get ocrResultDialogTitle => 'OCR結果';
+
+  @override
+  String get noTextRecognized => 'テキストが認識されませんでした。';
+
+  @override
+  String get selectTextPrompt => '認識されたテキストをタップして選択してください。';
+
+  @override
+  String get closeButtonText => '閉じる';
+
+  @override
+  String get permissionDeniedMessage => '権限が拒否されました。カメラ/ギャラリーへのアクセスを許可してください。';
+
+  @override
+  String get imagePickingCancelled => '画像の選択がキャンセルされました。';
+
+  @override
+  String textRecognitionFailed(Object error) {
+    return 'テキスト認識に失敗しました: $error';
+  }
 }
