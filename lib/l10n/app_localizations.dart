@@ -289,6 +289,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No matching friends found.'**
   String get noMatchingFriendsMessage;
+
+  /// No description provided for @ocrFromCameraTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR from Camera'**
+  String get ocrFromCameraTooltip;
+
+  /// No description provided for @ocrFromGalleryTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR from Gallery'**
+  String get ocrFromGalleryTooltip;
+
+  /// No description provided for @ocrResultDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'OCR Results'**
+  String get ocrResultDialogTitle;
+
+  /// No description provided for @noTextRecognized.
+  ///
+  /// In en, this message translates to:
+  /// **'No text was recognized.'**
+  String get noTextRecognized;
+
+  /// No description provided for @selectTextPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on the recognized text to select it.'**
+  String get selectTextPrompt;
+
+  /// No description provided for @closeButtonText.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButtonText;
+
+  /// No description provided for @permissionDeniedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied. Please grant camera/gallery access.'**
+  String get permissionDeniedMessage;
+
+  /// No description provided for @imagePickingCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Image selection cancelled.'**
+  String get imagePickingCancelled;
+
+  /// No description provided for @textRecognitionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Text recognition failed: {error}'**
+  String textRecognitionFailed(Object error);
 }
 
 class _AppLocalizationsDelegate

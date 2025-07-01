@@ -118,4 +118,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noMatchingFriendsMessage => 'No matching friends found.';
+
+  @override
+  String get ocrFromCameraTooltip => 'OCR from Camera';
+
+  @override
+  String get ocrFromGalleryTooltip => 'OCR from Gallery';
+
+  @override
+  String get ocrResultDialogTitle => 'OCR Results';
+
+  @override
+  String get noTextRecognized => 'No text was recognized.';
+
+  @override
+  String get selectTextPrompt => 'Tap on the recognized text to select it.';
+
+  @override
+  String get closeButtonText => 'Close';
+
+  @override
+  String get permissionDeniedMessage =>
+      'Permission denied. Please grant camera/gallery access.';
+
+  @override
+  String get imagePickingCancelled => 'Image selection cancelled.';
+
+  @override
+  String textRecognitionFailed(Object error) {
+    return 'Text recognition failed: $error';
+  }
 }

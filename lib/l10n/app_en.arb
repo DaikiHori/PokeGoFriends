@@ -47,5 +47,15 @@
   "luckyFilterAll": "All",
   "luckyFilterLuckyOnly": "Lucky",
   "luckyFilterNotLucky": "Not",
-  "noMatchingFriendsMessage": "No matching friends found."
+  "noMatchingFriendsMessage": "No matching friends found.",
+  "ocrFromCameraTooltip": "OCR from Camera",
+  "ocrFromGalleryTooltip": "OCR from Gallery",
+  "ocrResultDialogTitle": "OCR Results",
+  "noTextRecognized": "No text was recognized.",
+  "selectTextPrompt": "Tap on the recognized text to select it.",
+  "closeButtonText": "Close",
+  "permissionDeniedMessage": "Permission denied. Please grant camera/gallery access.",
+  "imagePickingCancelled": "Image selection cancelled.",
+  "textRecognitionFailed": "Text recognition failed: {error}"
+
 }
