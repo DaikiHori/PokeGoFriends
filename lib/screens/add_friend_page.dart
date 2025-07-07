@@ -47,7 +47,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
   // ImagePickerのインスタンス
   final ImagePicker _picker = ImagePicker();
   // TextRecognizerのインスタンス
-  final TextRecognizer _textRecognizer = TextRecognizer();
+  final TextRecognizer _textRecognizer = TextRecognizer(script: TextRecognitionScript.japanese);
 
   @override
   void initState() {
