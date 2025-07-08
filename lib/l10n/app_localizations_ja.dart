@@ -101,7 +101,7 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get searchByNameLabel => '名前で検索';
+  String get searchByNameLabel => '名前またはニックネームで検索';
 
   @override
   String get filterByLuckyLabel => 'キラで絞り込み';
@@ -146,4 +146,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String textRecognitionFailed(Object error) {
     return 'テキスト認識に失敗しました: $error';
   }
+
+  @override
+  String get sortNameAscTooltip => '名前で昇順ソート (あ-ん)';
+
+  @override
+  String get sortNameDescTooltip => '名前で降順ソート (ん-あ)';
+
+  @override
+  String get sortNicknameAscTooltip => 'ニックネームで昇順ソート (あ-ん)';
+
+  @override
+  String get sortNicknameDescTooltip => 'ニックネームで降順ソート (ん-あ)';
 }

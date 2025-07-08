@@ -257,7 +257,7 @@ abstract class AppLocalizations {
   /// No description provided for @searchByNameLabel.
   ///
   /// In en, this message translates to:
-  /// **'Search by Name'**
+  /// **'Search by Name or Nickname'**
   String get searchByNameLabel;
 
   /// No description provided for @filterByLuckyLabel.
@@ -343,6 +343,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Text recognition failed: {error}'**
   String textRecognitionFailed(Object error);
+
+  /// No description provided for @sortNameAscTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Name (A-Z)'**
+  String get sortNameAscTooltip;
+
+  /// No description provided for @sortNameDescTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Name (Z-A)'**
+  String get sortNameDescTooltip;
+
+  /// No description provided for @sortNicknameAscTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Nickname (A-Z)'**
+  String get sortNicknameAscTooltip;
+
+  /// No description provided for @sortNicknameDescTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by Nickname (Z-A)'**
+  String get sortNicknameDescTooltip;
 }
 
 class _AppLocalizationsDelegate

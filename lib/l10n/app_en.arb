@@ -42,7 +42,7 @@
       }
     }
   },
-  "searchByNameLabel": "Search by Name",
+  "searchByNameLabel": "Search by Name or Nickname",
   "filterByLuckyLabel": "Filter by Lucky Status",
   "luckyFilterAll": "All",
   "luckyFilterLuckyOnly": "Lucky",
@@ -56,6 +56,10 @@
   "closeButtonText": "Close",
   "permissionDeniedMessage": "Permission denied. Please grant camera/gallery access.",
   "imagePickingCancelled": "Image selection cancelled.",
-  "textRecognitionFailed": "Text recognition failed: {error}"
+  "textRecognitionFailed": "Text recognition failed: {error}",
+  "sortNameAscTooltip": "Sort by Name (A-Z)",
+  "sortNameDescTooltip": "Sort by Name (Z-A)",
+  "sortNicknameAscTooltip": "Sort by Nickname (A-Z)",
+  "sortNicknameDescTooltip": "Sort by Nickname (Z-A)"
 
 }
