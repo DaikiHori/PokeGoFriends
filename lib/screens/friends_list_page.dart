@@ -8,6 +8,13 @@ import '../widgets/filter_toggle_button.dart';
 import 'package:poke_go_friends/screens/add_friend_page.dart'; // AddFriendPageへ遷移するため
 import 'package:url_launcher/url_launcher.dart'; // URLを開くためのパッケージ
 
+// ソートの状態を定義するenum
+enum SortOrder {
+  nameAsc,      // 名前 昇順
+  nameDesc,     // 名前 降順
+  nicknameAsc,  // ニックネーム 昇順
+  nicknameDesc, // ニックネーム 降順
+}
 // FriendsListPageは、データベースから友達のリストを表示するためのステートフルウィジェットです。
 class FriendsListPage extends StatefulWidget {
   const FriendsListPage({super.key});
@@ -29,7 +36,8 @@ class _FriendsListPageState extends State<FriendsListPage> {
   int _luckyFilterStateIndex = 0;
   int _contactedFilterStateIndex = 0;
   int _canContactFilterStateIndex = 0;
-
+  // 現在選択されているソート順 (デフォルトは名前昇順)
+  SortOrder _currentSortOrder = SortOrder.nameAsc;
   // データがロード中かどうかを示すフラグ
   bool _isLoading = true;
 
@@ -135,9 +143,10 @@ class _FriendsListPageState extends State<FriendsListPage> {
     final String searchText = _searchController.text.toLowerCase();
     setState(() {
       _filteredFriends = _friends.where((friend) {
-        // 名前によるフィルタリング
-        final bool nameMatches = searchText.isEmpty ||
-            friend.name.toLowerCase().contains(searchText);
+        // 名前とニックネームによるフィルタリング
+        final bool nameOrNicknameMatches = searchText.isEmpty ||
+            friend.name.toLowerCase().contains(searchText) ||
+            (friend.nickname != null && friend.nickname!.toLowerCase().contains(searchText));
 
         // luckyフィルタによるフィルタリング
         final bool luckyMatches;
@@ -168,9 +177,89 @@ class _FriendsListPageState extends State<FriendsListPage> {
         } else { // 0: All
           canContactMatches = true;
         }
-        return nameMatches && luckyMatches && contactedMatches && canContactMatches;
+        return nameOrNicknameMatches && luckyMatches && contactedMatches && canContactMatches;
       }).toList();
+      // フィルタリング後にソートを実行
+      _filteredFriends.sort((a, b) {
+        switch (_currentSortOrder) {
+          case SortOrder.nameAsc:
+            return a.name.compareTo(b.name);
+          case SortOrder.nameDesc:
+            return b.name.compareTo(a.name);
+          case SortOrder.nicknameAsc:
+          // nullを考慮したソート: nullは空文字列として扱う
+            final String nickA = a.nickname ?? '';
+            final String nickB = b.nickname ?? '';
+            return nickA.compareTo(nickB);
+          case SortOrder.nicknameDesc:
+          // nullを考慮したソート: nullは空文字列として扱う
+            final String nickA = a.nickname ?? '';
+            final String nickB = b.nickname ?? '';
+            return nickB.compareTo(nickA);
+        }
+      });
     });
+  }
+
+  // ソート順を切り替えるメソッド
+  void _toggleSortOrder() {
+    setState(() {
+      switch (_currentSortOrder) {
+        case SortOrder.nameAsc:
+          _currentSortOrder = SortOrder.nameDesc;
+          break;
+        case SortOrder.nameDesc:
+          _currentSortOrder = SortOrder.nicknameAsc;
+          break;
+        case SortOrder.nicknameAsc:
+          _currentSortOrder = SortOrder.nicknameDesc;
+          break;
+        case SortOrder.nicknameDesc:
+          _currentSortOrder = SortOrder.nameAsc; // 最初の状態に戻る
+          break;
+      }
+      _filterFriends(); // ソート順変更後、再フィルタリング（ソート）
+    });
+  }
+
+  // 現在のソート順に応じたアイコンの色を取得 (新規追加)
+  Color _getSortIconColor() {
+    switch (_currentSortOrder) {
+      case SortOrder.nameAsc:
+        return Colors.blue; // 名前昇順は青
+      case SortOrder.nameDesc:
+        return Colors.yellow; // 名前降順は黄色
+      case SortOrder.nicknameAsc:
+        return Colors.lightBlue; // ニックネーム昇順は薄い青
+      case SortOrder.nicknameDesc:
+        return Colors.yellow.shade200; // ニックネーム降順は薄い黄色
+    }
+  }
+  // 現在のソート順に応じたアイコンを取得
+  IconData _getSortIcon() {
+    switch (_currentSortOrder) {
+      case SortOrder.nameAsc:
+        return Icons.sort_by_alpha; // 名前昇順
+      case SortOrder.nameDesc:
+        return Icons.sort_by_alpha; // 名前降順 (アイコンは同じだがツールチップで区別)
+      case SortOrder.nicknameAsc:
+        return Icons.text_fields; // ニックネーム昇順 (別のアイコンで区別)
+      case SortOrder.nicknameDesc:
+        return Icons.text_fields; // ニックネーム降順 (アイコンは同じだがツールチップで区別)
+    }
+  }
+  // 現在のソート順に応じたツールチップを取得
+  String _getSortTooltip(AppLocalizations localizations) {
+    switch (_currentSortOrder) {
+      case SortOrder.nameAsc:
+        return localizations.sortNameAscTooltip;
+      case SortOrder.nameDesc:
+        return localizations.sortNameDescTooltip;
+      case SortOrder.nicknameAsc:
+        return localizations.sortNicknameAscTooltip;
+      case SortOrder.nicknameDesc:
+        return localizations.sortNicknameDescTooltip;
+    }
   }
 
   @override
@@ -231,8 +320,9 @@ class _FriendsListPageState extends State<FriendsListPage> {
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (friend.campfireName != null &&
-                      friend.campfireName!.isNotEmpty)
+                  if (friend.nickname != null && friend.nickname!.isNotEmpty)
+                    Text('${localizations.friendNicknameLabel}: ${friend.nickname!}'),
+                  if (friend.campfireName != null && friend.campfireName!.isNotEmpty)
                     Text(
                       '${localizations.friendCampfireNameLabel}: ${friend
                           .campfireName!}',
@@ -317,15 +407,28 @@ class _FriendsListPageState extends State<FriendsListPage> {
           mainAxisSize: MainAxisSize.min, // 高さを内容に合わせる
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: localizations.searchByNameLabel, // 検索バーのラベル
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      labelText: localizations.searchByNameLabel, // 検索バーのラベル
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      ),
+                      prefixIcon: const Icon(Icons.search), // 検索アイコン
+                    ),
+                  ),
                 ),
-                prefixIcon: const Icon(Icons.search), // 検索アイコン
-              ),
+                const SizedBox(width: 8.0), // テキストフィールドとアイコンの間のスペース
+                IconButton( // <-- ソートアイコン
+                  icon: Icon(_getSortIcon()),
+                  color: _getSortIconColor(),
+                  tooltip: _getSortTooltip(localizations),
+                  onPressed: _toggleSortOrder,
+                ),
+              ],
             ),
             const SizedBox(height: 14.0),
             Row(

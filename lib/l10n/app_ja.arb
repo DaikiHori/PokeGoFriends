@@ -42,7 +42,7 @@
       }
     }
   },
-  "searchByNameLabel": "名前で検索",
+  "searchByNameLabel": "名前またはニックネームで検索",
   "filterByLuckyLabel": "キラで絞り込み",
   "luckyFilterAll": "すべて",
   "luckyFilterLuckyOnly": "キラ",
@@ -56,6 +56,10 @@
   "closeButtonText": "閉じる",
   "permissionDeniedMessage": "権限が拒否されました。カメラ/ギャラリーへのアクセスを許可してください。",
   "imagePickingCancelled": "画像の選択がキャンセルされました。",
-  "textRecognitionFailed": "テキスト認識に失敗しました: {error}"
+  "textRecognitionFailed": "テキスト認識に失敗しました: {error}",
+  "sortNameAscTooltip": "名前で昇順ソート (あ-ん)",
+  "sortNameDescTooltip": "名前で降順ソート (ん-あ)",
+  "sortNicknameAscTooltip": "ニックネームで昇順ソート (あ-ん)",
+  "sortNicknameDescTooltip": "ニックネームで降順ソート (ん-あ)"
 
 }

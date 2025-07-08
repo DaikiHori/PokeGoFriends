@@ -102,7 +102,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get searchByNameLabel => 'Search by Name';
+  String get searchByNameLabel => 'Search by Name or Nickname';
 
   @override
   String get filterByLuckyLabel => 'Filter by Lucky Status';
@@ -148,4 +148,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String textRecognitionFailed(Object error) {
     return 'Text recognition failed: $error';
   }
+
+  @override
+  String get sortNameAscTooltip => 'Sort by Name (A-Z)';
+
+  @override
+  String get sortNameDescTooltip => 'Sort by Name (Z-A)';
+
+  @override
+  String get sortNicknameAscTooltip => 'Sort by Nickname (A-Z)';
+
+  @override
+  String get sortNicknameDescTooltip => 'Sort by Nickname (Z-A)';
 }
