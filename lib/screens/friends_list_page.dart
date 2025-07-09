@@ -183,9 +183,9 @@ class _FriendsListPageState extends State<FriendsListPage> {
       _filteredFriends.sort((a, b) {
         switch (_currentSortOrder) {
           case SortOrder.nameAsc:
-            return a.name.compareTo(b.name);
+            return a.name.toLowerCase().compareTo(b.name.toLowerCase());
           case SortOrder.nameDesc:
-            return b.name.compareTo(a.name);
+            return b.name.toLowerCase().compareTo(a.name.toLowerCase());
           case SortOrder.nicknameAsc:
           // nullを考慮したソート: nullは空文字列として扱う
             final String nickA = a.nickname ?? '';
