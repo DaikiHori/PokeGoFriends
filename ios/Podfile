@@ -12,19 +12,3 @@
 #
 
 platform :ios, '15.5'
-
-# 省略... (Podfileの残りの部分はそのまま)
-
-flutter_application_path = '../..'
-load File.join(flutter_application_path, '.ios', 'Flutter', 'podhelper.rb')
-
-target 'Runner' do
-  use_frameworks!
-  use_modular_headers!
-
-  flutter_install_all_pods_debug_config(flutter_application_path)
-
-  target 'RunnerTests' do
-    inherit! :search_paths
-  end
-end
