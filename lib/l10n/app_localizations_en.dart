@@ -160,4 +160,59 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sortNicknameDescTooltip => 'Sort by Nickname (Z-A)';
+
+  @override
+  String get exportDataMenuText => 'Export Data';
+
+  @override
+  String get importDataMenuText => 'Import Data';
+
+  @override
+  String get exportSelectLocationTitle => 'Select Export Location';
+
+  @override
+  String exportSuccessMessage(Object path) {
+    return 'Data exported successfully to: $path';
+  }
+
+  @override
+  String get exportCancelledMessage => 'Data export cancelled.';
+
+  @override
+  String exportFailedMessage(Object error) {
+    return 'Failed to export data: $error';
+  }
+
+  @override
+  String get importSelectFileTitle => 'Select Import File';
+
+  @override
+  String get importConfirmTitle => 'Confirm Import';
+
+  @override
+  String get importConfirmMessage =>
+      'Importing data will delete all existing data. Are you sure you want to proceed?';
+
+  @override
+  String get importConfirmButtonText => 'Import';
+
+  @override
+  String get importCancelledMessage => 'Data import cancelled.';
+
+  @override
+  String importFailedMessage(Object error) {
+    return 'Failed to import data: $error';
+  }
+
+  @override
+  String get csvImportFailedEmptyOrUnreadable =>
+      'CSV import failed: file is empty or unreadable.';
+
+  @override
+  String friendImportSummaryMessage(Object friendsCount, Object path) {
+    return 'Data imported successfully from $path.\nFriends imported: $friendsCount.';
+  }
+
+  @override
+  String get menuTitle => 'Menu';
 }

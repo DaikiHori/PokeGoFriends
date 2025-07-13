@@ -7,6 +7,13 @@ import '../models/friend.dart'; // Friendモデルクラスをインポート
 import '../widgets/filter_toggle_button.dart';
 import 'package:poke_go_friends/screens/add_friend_page.dart'; // AddFriendPageへ遷移するため
 import 'package:url_launcher/url_launcher.dart'; // URLを開くためのパッケージ
+import 'package:file_picker/file_picker.dart'; // ファイルピッカー用
+import 'dart:io'; // ファイル操作用 (kIsWebの代替)
+import 'dart:convert'; // CSVエンコード/デコード用
+import 'dart:typed_data'; // バイトデータ操作用
+import 'package:csv/csv.dart'; // CSVライブラリ用
+import 'package:flutter/foundation.dart' show kIsWeb; // Webプラットフォーム判定用
+import 'package:intl/intl.dart'; // 日付フォーマット用 (エクスポートファイル名用)
 
 // ソートの状態を定義するenum
 enum SortOrder {
@@ -262,6 +269,216 @@ class _FriendsListPageState extends State<FriendsListPage> {
     }
   }
 
+  // エクスポート機能
+  String _generateCsvContent(List<Friend> friends) {
+    List<List<dynamic>> csvData = [];
+    // ヘッダー行
+    csvData.add([
+      'id', 'name', 'lucky', 'nickname', 'campfireId', 'campfireName',
+      'contacted', 'canContact', 'xAccount', 'lineName'
+    ]);
+    // データ行
+    for (var friend in friends) {
+      csvData.add([
+        friend.id,
+        friend.name,
+        friend.lucky,
+        friend.nickname ?? '', // nullの場合は空文字列
+        friend.campfireId ?? '',
+        friend.campfireName ?? '',
+        friend.contacted,
+        friend.canContact,
+        friend.xAccount ?? '',
+        friend.lineName ?? '',
+      ]);
+    }
+    const converter = ListToCsvConverter();
+    return converter.convert(csvData);
+  }
+
+  Future<void> _exportData() async {
+    final localizations = AppLocalizations.of(context)!;
+    try {
+      final allFriends = await DbHelper.instance.getFriends();
+      String csvContent = _generateCsvContent(allFriends);
+      final List<int> bytes = utf8.encode(csvContent);
+      final Uint8List data = Uint8List.fromList(bytes);
+
+      String? outputPath = await FilePicker.platform.saveFile(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+        dialogTitle: localizations.exportSelectLocationTitle,
+        fileName: 'friends_data_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.csv',
+        bytes: data, // Webではbytesを指定
+      );
+
+      if (outputPath != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.exportSuccessMessage(outputPath))),
+        );
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.exportCancelledMessage)),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizations.exportFailedMessage(e.toString()))),
+      );
+    }
+  }
+
+  // インポート機能
+  Future<void> _importData() async {
+    final localizations = AppLocalizations.of(context)!;
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+        dialogTitle: localizations.importSelectFileTitle,
+      );
+
+      if (result != null && result.files.single.name.isNotEmpty) {
+        String csvContent;
+        if (kIsWeb) {
+          if (result.files.single.bytes == null) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(localizations.importFailedMessage('Failed to read file bytes on web.'))),
+            );
+            return;
+          }
+          csvContent = utf8.decode(result.files.single.bytes!);
+        } else {
+          if (result.files.single.path == null) {
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(localizations.importFailedMessage('Failed to get file path on native platform.'))),
+            );
+            return;
+          }
+          final File file = File(result.files.single.path!);
+          csvContent = await file.readAsString();
+        }
+
+        final bool? confirmImport = await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(localizations.importConfirmTitle),
+              content: Text(localizations.importConfirmMessage),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(localizations.cancelButtonText),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: Text(localizations.importConfirmButtonText),
+                ),
+              ],
+            );
+          },
+        );
+
+        if (confirmImport != true) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(localizations.importCancelledMessage)),
+          );
+          return;
+        }
+
+        await DbHelper.instance.clearAllTables();
+
+        csvContent = csvContent.replaceAll('\r\n', '\n'); // 改行コードを正規化
+        final List<List<dynamic>> rows = const CsvToListConverter(eol: '\n').convert(csvContent);
+
+        if (rows.isEmpty || rows.first.isEmpty) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(localizations.csvImportFailedEmptyOrUnreadable)),
+          );
+          return;
+        }
+
+        // ヘッダー行をスキップし、データ行のみを処理
+        final List<String> headers = rows.first.map((e) => e.toString()).toList();
+        int importedFriends = 0;
+
+        for (int i = 1; i < rows.length; i++) { // ヘッダー行の次から開始
+          final row = rows[i];
+          if (row.isEmpty || (row.length == 1 && row[0].toString().trim().isEmpty)) {
+            continue; // 空行はスキップ
+          }
+
+          final Map<String, dynamic> rowMap = {};
+          for (int j = 0; j < headers.length; j++) {
+            if (j < row.length) {
+              rowMap[headers[j]] = row[j];
+            } else {
+              rowMap[headers[j]] = null;
+            }
+          }
+
+          try {
+            // Friendデータのインポート
+            final friendName = rowMap['name']?.toString() ?? '';
+            if (friendName.isEmpty) {
+              continue;
+            }
+
+            final newFriend = Friend(
+              name: friendName,
+              lucky: int.tryParse(rowMap['lucky'].toString()) ?? 0,
+              nickname: rowMap['nickname']?.toString().isEmpty == true ? null : rowMap['nickname'].toString(),
+              campfireId: rowMap['campfireId']?.toString().isEmpty == true ? null : rowMap['campfireId'].toString(),
+              campfireName: rowMap['campfireName']?.toString().isEmpty == true ? null : rowMap['campfireName'].toString(),
+              contacted: int.tryParse(rowMap['contacted'].toString()) ?? 0,
+              canContact: int.tryParse(rowMap['canContact'].toString()) ?? 0,
+              xAccount: rowMap['xAccount']?.toString().isEmpty == true ? null : rowMap['xAccount'].toString(),
+              lineName: rowMap['lineName']?.toString().isEmpty == true ? null : rowMap['lineName'].toString(),
+            );
+            await DbHelper.instance.insertFriend(newFriend);
+            importedFriends++;
+
+          } catch (e) {
+            // エラーが発生しても処理を続行するために、ここではスキップされた行のカウントはしない
+          }
+        }
+
+        final String displayPath = kIsWeb ? result.files.single.name : (result.files.single.path ?? 'selected file');
+
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              localizations.friendImportSummaryMessage(
+                displayPath,
+                importedFriends
+              ),
+            ),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+        await _loadFriends();
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(localizations.importCancelledMessage)),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(localizations.importFailedMessage(e.toString()))),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context);
@@ -269,6 +486,43 @@ class _FriendsListPageState extends State<FriendsListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations.friendsListPageTitle), // ページのタイトル
+      ),
+      endDrawer: Drawer( // ドロワー
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Text(
+                localizations.menuTitle,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+
+            const Divider(), // 区切り線
+            ListTile( // <-- データエクスポート
+              leading: const Icon(Icons.upload_file),
+              title: Text(localizations.exportDataMenuText),
+              onTap: () {
+                Navigator.pop(context); // ドロワーを閉じる
+                _exportData();
+              },
+            ),
+            ListTile( // <-- データインポート
+              leading: const Icon(Icons.file_download),
+              title: Text(localizations.importDataMenuText),
+              onTap: () {
+                Navigator.pop(context); // ドロワーを閉じる
+                _importData();
+              },
+            ),
+          ],
+        ),
       ),
       body: _isLoading
           ? const Center(
