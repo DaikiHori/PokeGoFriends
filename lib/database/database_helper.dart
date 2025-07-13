@@ -144,4 +144,17 @@ class DbHelper {
     await db.close();
     _database = null; // データベースインスタンスをクリア
   }
+
+  // User CRUD Operations (for autocomplete and import)
+  Future<int> insertUser(Friend friend) async {
+    final db = await instance.database;
+    // UNIQUE制約があるため、重複する場合は無視
+    return await db.insert('friend', friend.toMap(), conflictAlgorithm: ConflictAlgorithm.ignore);
+  }
+
+  // 全てのテーブルのデータをクリアするメソッド (CSVインポート前に使用)
+  Future<void> clearAllTables() async {
+    final db = await instance.database;
+    await db.delete('friends');
+  }
 }

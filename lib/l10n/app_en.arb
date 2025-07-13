@@ -60,6 +60,21 @@
   "sortNameAscTooltip": "Sort by Name (A-Z)",
   "sortNameDescTooltip": "Sort by Name (Z-A)",
   "sortNicknameAscTooltip": "Sort by Nickname (A-Z)",
-  "sortNicknameDescTooltip": "Sort by Nickname (Z-A)"
+  "sortNicknameDescTooltip": "Sort by Nickname (Z-A)",
+  "exportDataMenuText": "Export Data",
+  "importDataMenuText": "Import Data",
+  "exportSelectLocationTitle": "Select Export Location",
+  "exportSuccessMessage": "Data exported successfully to: {path}",
+  "exportCancelledMessage": "Data export cancelled.",
+  "exportFailedMessage": "Failed to export data: {error}",
+  "importSelectFileTitle": "Select Import File",
+  "importConfirmTitle": "Confirm Import",
+  "importConfirmMessage": "Importing data will delete all existing data. Are you sure you want to proceed?",
+  "importConfirmButtonText": "Import",
+  "importCancelledMessage": "Data import cancelled.",
+  "importFailedMessage": "Failed to import data: {error}",
+  "csvImportFailedEmptyOrUnreadable": "CSV import failed: file is empty or unreadable.",
+  "friendImportSummaryMessage": "Data imported successfully from {path}.\nFriends imported: {friendsCount}.",
+  "menuTitle": "Menu"
 
 }

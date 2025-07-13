@@ -367,6 +367,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sort by Nickname (Z-A)'**
   String get sortNicknameDescTooltip;
+
+  /// No description provided for @exportDataMenuText.
+  ///
+  /// In en, this message translates to:
+  /// **'Export Data'**
+  String get exportDataMenuText;
+
+  /// No description provided for @importDataMenuText.
+  ///
+  /// In en, this message translates to:
+  /// **'Import Data'**
+  String get importDataMenuText;
+
+  /// No description provided for @exportSelectLocationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Export Location'**
+  String get exportSelectLocationTitle;
+
+  /// No description provided for @exportSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data exported successfully to: {path}'**
+  String exportSuccessMessage(Object path);
+
+  /// No description provided for @exportCancelledMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data export cancelled.'**
+  String get exportCancelledMessage;
+
+  /// No description provided for @exportFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export data: {error}'**
+  String exportFailedMessage(Object error);
+
+  /// No description provided for @importSelectFileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Import File'**
+  String get importSelectFileTitle;
+
+  /// No description provided for @importConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Import'**
+  String get importConfirmTitle;
+
+  /// No description provided for @importConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Importing data will delete all existing data. Are you sure you want to proceed?'**
+  String get importConfirmMessage;
+
+  /// No description provided for @importConfirmButtonText.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get importConfirmButtonText;
+
+  /// No description provided for @importCancelledMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data import cancelled.'**
+  String get importCancelledMessage;
+
+  /// No description provided for @importFailedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import data: {error}'**
+  String importFailedMessage(Object error);
+
+  /// No description provided for @csvImportFailedEmptyOrUnreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV import failed: file is empty or unreadable.'**
+  String get csvImportFailedEmptyOrUnreadable;
+
+  /// No description provided for @friendImportSummaryMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Data imported successfully from {path}.\nFriends imported: {friendsCount}.'**
+  String friendImportSummaryMessage(Object friendsCount, Object path);
+
+  /// No description provided for @menuTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menuTitle;
 }
 
 class _AppLocalizationsDelegate
