@@ -60,6 +60,21 @@
   "sortNameAscTooltip": "名前で昇順ソート (あ-ん)",
   "sortNameDescTooltip": "名前で降順ソート (ん-あ)",
   "sortNicknameAscTooltip": "ニックネームで昇順ソート (あ-ん)",
-  "sortNicknameDescTooltip": "ニックネームで降順ソート (ん-あ)"
+  "sortNicknameDescTooltip": "ニックネームで降順ソート (ん-あ)",
+  "exportDataMenuText": "データエクスポート",
+  "importDataMenuText": "データインポート",
+  "exportSelectLocationTitle": "エクスポート先を選択",
+  "exportSuccessMessage": "データを {path} にエクスポートしました。",
+  "exportCancelledMessage": "データのエクスポートがキャンセルされました。",
+  "exportFailedMessage": "データのエクスポートに失敗しました: {error}",
+  "importSelectFileTitle": "インポートファイルを選択",
+  "importConfirmTitle": "インポートの確認",
+  "importConfirmMessage": "データをインポートすると、既存の全てのデータが削除されます。続行してもよろしいですか？",
+  "importConfirmButtonText": "インポート",
+  "importCancelledMessage": "データのインポートがキャンセルされました。",
+  "importFailedMessage": "データのインポートに失敗しました: {error}",
+  "csvImportFailedEmptyOrUnreadable": "CSVインポートに失敗しました: ファイルが空であるか、読み取れません。",
+  "friendImportSummaryMessage": "{path} からデータをインポートしました。\n友達: {friendsCount}件",
+  "menuTitle": "メニュー"
 
 }

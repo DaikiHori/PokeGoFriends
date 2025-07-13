@@ -144,4 +144,10 @@ class DbHelper {
     await db.close();
     _database = null; // データベースインスタンスをクリア
   }
+
+  // 全てのテーブルのデータをクリアするメソッド (CSVインポート前に使用)
+  Future<void> clearAllTables() async {
+    final db = await instance.database;
+    await db.delete('friends');
+  }
 }

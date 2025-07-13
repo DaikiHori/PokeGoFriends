@@ -158,4 +158,59 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get sortNicknameDescTooltip => 'ニックネームで降順ソート (ん-あ)';
+
+  @override
+  String get exportDataMenuText => 'データエクスポート';
+
+  @override
+  String get importDataMenuText => 'データインポート';
+
+  @override
+  String get exportSelectLocationTitle => 'エクスポート先を選択';
+
+  @override
+  String exportSuccessMessage(Object path) {
+    return 'データを $path にエクスポートしました。';
+  }
+
+  @override
+  String get exportCancelledMessage => 'データのエクスポートがキャンセルされました。';
+
+  @override
+  String exportFailedMessage(Object error) {
+    return 'データのエクスポートに失敗しました: $error';
+  }
+
+  @override
+  String get importSelectFileTitle => 'インポートファイルを選択';
+
+  @override
+  String get importConfirmTitle => 'インポートの確認';
+
+  @override
+  String get importConfirmMessage =>
+      'データをインポートすると、既存の全てのデータが削除されます。続行してもよろしいですか？';
+
+  @override
+  String get importConfirmButtonText => 'インポート';
+
+  @override
+  String get importCancelledMessage => 'データのインポートがキャンセルされました。';
+
+  @override
+  String importFailedMessage(Object error) {
+    return 'データのインポートに失敗しました: $error';
+  }
+
+  @override
+  String get csvImportFailedEmptyOrUnreadable =>
+      'CSVインポートに失敗しました: ファイルが空であるか、読み取れません。';
+
+  @override
+  String friendImportSummaryMessage(Object friendsCount, Object path) {
+    return '$path からデータをインポートしました。\n友達: $friendsCount件';
+  }
+
+  @override
+  String get menuTitle => 'メニュー';
 }
