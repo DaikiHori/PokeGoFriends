@@ -34,6 +34,7 @@ target 'Runner' do
   target 'RunnerTests' do
     inherit! :search_paths
   end
+  pod 'GoogleMLKit/TextRecognitionJapanese'
 end
 
 # add this line:
