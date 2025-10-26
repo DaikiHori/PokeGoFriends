@@ -12,3 +12,12 @@
 #
 
 platform :ios, '15.5'
+target 'Runner' do
+  # ... 他の既存のコード ...
+
+  # 日本語認識モデルの追加
+  pod 'GoogleMLKit/TextRecognitionJapanese'
+  # (注: 使用している ML Kit SDK のバージョンに合わせてバージョン番号を調整してください)
+
+  # ... 他の既存のコード ...
+end
