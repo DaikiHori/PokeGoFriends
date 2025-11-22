@@ -1,17 +1,18 @@
 // lib/screens/add_friend_page.dart
-
 import 'package:flutter/material.dart';
 import '../models/friend.dart'; // Friendモデルクラスをインポート
 import '../database/database_helper.dart';   // DbHelperクラスをインポート
 import 'package:poke_go_friends/l10n/app_localizations.dart'; // 多言語対応のためのインポート
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../controller/date_time_controller.dart';
 
 // AddFriendPageは新しい友達を追加/既存の友達を編集するためのステートフルウィジェットです。
 class AddFriendPage extends StatefulWidget {
   // 編集する友達のオブジェクト（新規追加の場合はnull）
   final Friend? friendToEdit;
-
   const AddFriendPage({super.key, this.friendToEdit});
 
   @override
@@ -34,7 +35,14 @@ class _AddFriendPageState extends State<AddFriendPage> {
   final TextEditingController _xAccountController = TextEditingController();
   // LINE名入力用コントローラー
   final TextEditingController _lineNameController = TextEditingController();
+  // トレード日
+  final TextEditingController _tradeDateTimeController = TextEditingController();
+  // トレード場所
+  final TextEditingController _tradePlaceController = TextEditingController();
 
+  late final DateTimeController _dateTimeController;
+
+  late final AppLocalizations localizations;
   // booleanフィールド: lucky
   bool _isLucky = false;
   // booleanフィールド: contacted
@@ -48,7 +56,6 @@ class _AddFriendPageState extends State<AddFriendPage> {
   final ImagePicker _picker = ImagePicker();
   // TextRecognizerのインスタンス
   final TextRecognizer _textRecognizer = TextRecognizer(script: TextRecognitionScript.japanese);
-
   @override
   void initState() {
     super.initState();
@@ -61,10 +68,31 @@ class _AddFriendPageState extends State<AddFriendPage> {
       _campfireNameController.text = _currentFriend!.campfireName ?? '';
       _xAccountController.text = _currentFriend!.xAccount ?? '';
       _lineNameController.text = _currentFriend!.lineName ?? '';
+      _tradeDateTimeController.text = _currentFriend!.tradeDateTime.toString() ?? '';
+      _tradePlaceController.text = _currentFriend!.tradePlace ?? '';
 
       _isLucky = _currentFriend!.lucky == 1;
       _isContacted = _currentFriend!.contacted == 1;
       _canContact = _currentFriend!.canContact == 1;
+    }
+    _dateTimeController = context.read<DateTimeController>();
+  }
+  bool _isInitialized = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      final String languageCode = Localizations.localeOf(context).languageCode;
+      if (widget.friendToEdit != null) {
+        final existingDateTime = widget.friendToEdit!.tradeDateTime;
+        if (existingDateTime != null) {
+          // DateTimeControllerに値をセット
+          _dateTimeController.setDate(existingDateTime);
+          // TextFieldにロケール対応した初期値をセット
+          _updateTradeDateTimeText(existingDateTime, languageCode);
+        }
+      }
+      _isInitialized = true;
     }
   }
 
@@ -155,6 +183,8 @@ class _AddFriendPageState extends State<AddFriendPage> {
     _campfireNameController.dispose();
     _xAccountController.dispose();
     _lineNameController.dispose();
+    _tradeDateTimeController.dispose();
+    _tradePlaceController.dispose();
     _textRecognizer.close();
     super.dispose();
   }
@@ -176,6 +206,8 @@ class _AddFriendPageState extends State<AddFriendPage> {
         canContact: _canContact ? 1 : 0,
         xAccount: _xAccountController.text.isEmpty ? null : _xAccountController.text,
         lineName: _lineNameController.text.isEmpty ? null : _lineNameController.text,
+        tradeDateTime: _tradeDateTimeController.text.isEmpty ? null : convertCustomFormat(_tradeDateTimeController.text),
+        tradePlace: _tradePlaceController.text.isEmpty ? null : _tradePlaceController.text
       );
 
       final dbHelper = DbHelper.instance;
@@ -227,11 +259,73 @@ class _AddFriendPageState extends State<AddFriendPage> {
       ],
     );
   }
+
+  DateTime? convertCustomFormat(String input) {
+    // 入力形式に完全に一致するDateFormatオブジェクトを作成
+    DateFormat format = DateFormat("yyyy/MM/dd HH:mm");
+
+    try {
+      // parseStrict: true を指定すると、形式が厳密にチェックされます
+      DateTime result = format.parseStrict(input);
+      return result;
+    } on FormatException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to exchange datetime: $e')),
+      );
+    }
+  }
+  // 💡 languageCode を引数として受け取るように修正
+  void _updateTradeDateTimeText(DateTime date, String languageCode) {
+    // 1. AppLocalizationsからロケール固有のフォーマット文字列を取得
+    final localizations = AppLocalizations.of(context)!;
+    final String formatString = localizations.dateTimeFormat; // .arbファイルで定義されたフォーマット文字列
+
+    // 2. DateFormatにロケールとフォーマット文字列を渡す
+    final DateFormat formatter = DateFormat(formatString, languageCode);
+
+    String formattedDate = formatter.format(date);
+    _tradeDateTimeController.text = formattedDate;
+  }
+
+  Future<void> _selectDateTime(BuildContext context) async {
+    // 1. まず日付を選択 (showDatePicker)
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _dateTimeController.selectedDate,
+      firstDate: DateTime(2000), // 選択可能な範囲を設定
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate == null) return; // 日付選択がキャンセルされたら終了
+
+    // 2. 次に時刻を選択 (showTimePicker)
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_dateTimeController.selectedDate),
+    );
+
+    if (pickedTime == null) return; // 時刻選択がキャンセルされたら終了
+
+    // 3. 選択された日付と時刻を結合
+    final DateTime finalDateTime = DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+    // 4. ControllerとTextFieldを更新
+    _dateTimeController.setDate(finalDateTime);
+    // 💡 ここで context からロケール情報を取得し、整形関数に渡す
+    final String languageCode = Localizations.localeOf(context).languageCode;
+    // TextFieldの表示を更新
+    _updateTradeDateTimeText(finalDateTime, languageCode);
+  }
+
   @override
   Widget build(BuildContext context) {
     // 多言語対応のテキストリソースを取得
     final localizations = AppLocalizations.of(context);
-
     return Scaffold(
       appBar: AppBar(
         // 編集モードか新規追加モードかでタイトルを動的に変更
@@ -361,6 +455,46 @@ class _AddFriendPageState extends State<AddFriendPage> {
                     ),
                   ),
                   _buildOcrButtons(_lineNameController, localizations), // OCRボタンを追加
+                ],
+              ),
+              const SizedBox(height: 16.0),
+
+              // trade日時
+              Row( // <-- Rowで囲む
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _tradeDateTimeController,
+                      readOnly: true, // ユーザーが直接入力できないようにする
+                      decoration: InputDecoration(
+                        labelText: localizations.tradeDateTimeLabel,
+                        suffixIcon: Icon(Icons.calendar_today), // カレンダーアイコンを追加
+                      ),
+                      onTap: () {
+                        // タップ時にPickerダイアログを表示
+                        _selectDateTime(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+
+              // trade場所
+              Row( // <-- Rowで囲む
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _tradePlaceController,
+                      decoration: InputDecoration(
+                        labelText: localizations.tradePlaceLabel,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // _buildOcrButtons(_tradePlaceController, localizations), // OCRボタンを追加
                 ],
               ),
               const SizedBox(height: 16.0),

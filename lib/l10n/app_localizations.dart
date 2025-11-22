@@ -457,6 +457,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Menu'**
   String get menuTitle;
+
+  /// No description provided for @tradeDateTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade Date'**
+  String get tradeDateTimeLabel;
+
+  /// No description provided for @tradePlaceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade Place'**
+  String get tradePlaceLabel;
+
+  /// No description provided for @dateTimeFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'MM/dd/yyyy h:mm a'**
+  String get dateTimeFormat;
 }
 
 class _AppLocalizationsDelegate

@@ -2,8 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:poke_go_friends/l10n/app_localizations.dart';
 import 'package:poke_go_friends/screens/friends_list_page.dart';
+import 'package:provider/provider.dart';
+import 'controller/date_time_controller.dart';
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      // コントローラーのインスタンスを作成
+      create: (context) => DateTimeController(),
+      child: const MyApp(), // アプリケーション全体で利用可能にする
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

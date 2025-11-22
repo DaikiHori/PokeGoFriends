@@ -215,4 +215,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get menuTitle => 'Menu';
+
+  @override
+  String get tradeDateTimeLabel => 'Trade Date';
+
+  @override
+  String get tradePlaceLabel => 'Trade Place';
+
+  @override
+  String get dateTimeFormat => 'MM/dd/yyyy h:mm a';
 }
