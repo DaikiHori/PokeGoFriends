@@ -10,6 +10,8 @@ class Friend {
   final int canContact;
   final String? xAccount;
   final String? lineName;
+  final DateTime? tradeDateTime;
+  final String? tradePlace;
 
   // idはオプションで、データベースが自動生成する際にnullを渡します。
   Friend({
@@ -23,6 +25,8 @@ class Friend {
     required this.canContact,
     this.xAccount,
     this.lineName,
+    this.tradeDateTime,
+    this.tradePlace
   });
 
   // オブジェクトの現在の値を元に、新しいFriendオブジェクトを生成します。
@@ -38,6 +42,8 @@ class Friend {
     int? canContact,
     String? xAccount,
     String? lineName,
+    DateTime? tradeDateTime,
+    String? tradePlace
   }) {
     return Friend(
       id: id ?? this.id,
@@ -50,6 +56,8 @@ class Friend {
       canContact: canContact ?? this.canContact,
       xAccount: xAccount ?? this.xAccount,
       lineName: lineName ?? this.lineName,
+      tradeDateTime: tradeDateTime ?? this.tradeDateTime,
+      tradePlace: tradePlace ?? this.tradePlace
     );
   }
 
@@ -67,12 +75,26 @@ class Friend {
       'canContact': canContact,
       'xAccount': xAccount,
       'lineName': lineName,
+      'tradeDateTime': tradeDateTime?.toIso8601String(),
+      'tradePlace': tradePlace
     };
   }
 
   // データベースから取得したMap形式のデータをFriendオブジェクトに変換します。
   // データベースからデータを読み込む際に使用されます。
   factory Friend.fromMap(Map<String, dynamic> map) {
+    final tradeDateTimeString = map['tradeDateTime'] as String?;
+
+    DateTime? parsedDateTime;
+    if (tradeDateTimeString != null && tradeDateTimeString.isNotEmpty) {
+      try {
+        // 💡 ここで文字列を DateTime にパース
+        parsedDateTime = DateTime.parse(tradeDateTimeString);
+      } catch (e) {
+        // パース失敗時は null
+        parsedDateTime = null;
+      }
+    }
     return Friend(
       id: map['id'] as int?, // IDはnullの可能性も考慮
       lucky: map['lucky'] as int,
@@ -84,12 +106,14 @@ class Friend {
       canContact: map['canContact'] as int,
       xAccount: map['xAccount'] as String?,
       lineName: map['lineName'] as String?,
+      tradeDateTime: parsedDateTime,
+      tradePlace: map['tradePlace'] as String?,
     );
   }
 
   // デバッグ時にオブジェクトの内容を確認しやすくするためのtoStringメソッド。
   @override
   String toString() {
-    return 'Friend{id: $id, lucky: $lucky name: $name, nickname: $nickname, campfireId: $campfireId, campfireId: $campfireId, contacted: $contacted, canContact: $canContact, xAccount: $xAccount, lineName: $lineName,}';
+    return 'Friend{id: $id, lucky: $lucky name: $name, nickname: $nickname, campfireId: $campfireId, campfireId: $campfireId, contacted: $contacted, canContact: $canContact, xAccount: $xAccount, lineName: $lineName, tradeDateTime: $tradeDateTime, tradePlace: $tradePlace }';
   }
 }

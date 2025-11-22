@@ -75,6 +75,9 @@
   "importFailedMessage": "データのインポートに失敗しました: {error}",
   "csvImportFailedEmptyOrUnreadable": "CSVインポートに失敗しました: ファイルが空であるか、読み取れません。",
   "friendImportSummaryMessage": "{path} からデータをインポートしました。\n友達: {friendsCount}件",
-  "menuTitle": "メニュー"
+  "menuTitle": "メニュー",
+  "tradeDateTimeLabel": "トレード日時",
+  "tradePlaceLabel": "トレード場所",
+  "dateTimeFormat": "yyyy/MM/dd HH:mm"
 
 }

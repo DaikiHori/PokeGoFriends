@@ -75,6 +75,9 @@
   "importFailedMessage": "Failed to import data: {error}",
   "csvImportFailedEmptyOrUnreadable": "CSV import failed: file is empty or unreadable.",
   "friendImportSummaryMessage": "Data imported successfully from {path}.\nFriends imported: {friendsCount}.",
-  "menuTitle": "Menu"
+  "menuTitle": "Menu",
+  "tradeDateTimeLabel": "Trade Date",
+  "tradePlaceLabel": "Trade Place",
+  "dateTimeFormat": "MM/dd/yyyy h:mm a"
 
 }

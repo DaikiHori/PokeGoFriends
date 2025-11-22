@@ -14,7 +14,7 @@ import 'dart:typed_data'; // バイトデータ操作用
 import 'package:csv/csv.dart'; // CSVライブラリ用
 import 'package:flutter/foundation.dart' show kIsWeb; // Webプラットフォーム判定用
 import 'package:intl/intl.dart'; // 日付フォーマット用 (エクスポートファイル名用)
-
+import 'friend_calendar_page.dart';
 // ソートの状態を定義するenum
 enum SortOrder {
   nameAsc,      // 名前 昇順
@@ -766,8 +766,24 @@ class _FriendsListPageState extends State<FriendsListPage> {
                     });
                   },
                 ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.calendar_month, // 適切なカレンダーアイコン
+                    color: Colors.blue,      // アイコンの色を青に設定
+                  ),
+                  iconSize: 32.0, // 必要に応じてサイズを調整
+                  onPressed: () {
+                    // FriendCalendarPageへ遷移する処理
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const FriendCalendarScreen(),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
+
           ],
         ),
       ),

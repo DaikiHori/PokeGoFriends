@@ -4,7 +4,7 @@ import 'package:path_provider/path_provider.dart'; // アプリケーション�
 import '../models/friend.dart';      // 前に定義したFriendモデルクラス
 
 // データベースのバージョン番号。スキーマ変更時にインクリメントします。
-const int _databaseVersion = 1;
+const int _databaseVersion = 2;
 
 // データベース名
 const String _databaseName = 'poke_go_friends_database.db';
@@ -58,7 +58,9 @@ class DbHelper {
         contacted INTEGER NOT NULL DEFAULT 0,
         canContact INTEGER NOT NULL DEFAULT 0,
         xAccount TEXT,
-        lineName TEXT
+        lineName TEXT,
+        tradeDateTime DATETIME,
+        tradePlace TEXT
       )
     ''');
     // SQLITEにおけるTEXTはDartのString、INTEGERはDartのintに対応します。
@@ -69,10 +71,10 @@ class DbHelper {
 
   // データベースのバージョンが上がったときの処理 (マイグレーションなど)
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // 例: バージョンが1から2に上がった場合
+    // バージョンが1から2に上がった場合
     if (oldVersion < 2) {
-      // 例: 新しいカラムを追加する場合
-      // await db.execute("ALTER TABLE $_tableName ADD COLUMN newColumn TEXT");
+      // 新しいカラムを追加する場合
+      await db.execute("ALTER TABLE $_tableName ADD COLUMN tradeDateTime TEXT, ADD COLUMN tradePlace DATETIME");
     }
   }
 
@@ -149,5 +151,27 @@ class DbHelper {
   Future<void> clearAllTables() async {
     final db = await instance.database;
     await db.delete('friends');
+  }
+
+  // 取引日時（tradeDateTime）がNULLまたは空文字列のフレンドのみを取得します。
+  Future<List<Friend>> getFriendsWithTradeDate() async {
+    final db = await instance.database;
+
+    // tradeDateTime が NULL または 空文字列 ('') のレコードを取得するクエリ
+    final List<Map<String, dynamic>> maps = await db.query(
+      _tableName, // 'friends' テーブル
+      where: 'tradeDateTime IS NOT NULL',
+    );
+
+    // MapのリストをFriendオブジェクトのリストに変換して返します。
+    if (maps.isEmpty) {
+      return [];
+    }
+
+    return List.generate(maps.length, (i) {
+      // Friend.fromMap() は、tradeDateTimeがNULLや空文字列の場合は
+      // DartのDateTime?としてnullを返すように設計されていると想定します。
+      return Friend.fromMap(maps[i]);
+    });
   }
 }
