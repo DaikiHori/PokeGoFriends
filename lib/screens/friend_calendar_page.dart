@@ -35,8 +35,6 @@ class _FriendCalendarScreenState extends State<FriendCalendarScreen> {
   Future<Map<DateTime, List<Event>>> _loadAllEventsFromDatabase() async {
     // データベースから全フレンドデータを取得
     final List<Friend> friends = await DbHelper.instance.getFriendsWithTradeDate();
-    print('--- [Calendar Data Debug] ---');
-    print('Total friends retrieved: ${friends.length}');
     final Map<DateTime, List<Event>> organizedEvents = {};
 
     for (var friend in friends) {
@@ -47,7 +45,7 @@ class _FriendCalendarScreenState extends State<FriendCalendarScreen> {
 
         // 2. Friend データから Event オブジェクトを作成
         final event = Event(
-          friend.name, // イベントタイトル (フレンド名を使用)
+          '${friend.name}:${friend.tradePlace}', // イベントタイトル (フレンド名を使用)
           dateWithTime, // イベントオブジェクトには時間情報を含める
         );
 
