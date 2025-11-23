@@ -68,7 +68,7 @@ class _AddFriendPageState extends State<AddFriendPage> {
       _campfireNameController.text = _currentFriend!.campfireName ?? '';
       _xAccountController.text = _currentFriend!.xAccount ?? '';
       _lineNameController.text = _currentFriend!.lineName ?? '';
-      _tradeDateTimeController.text = _currentFriend!.tradeDateTime.toString() ?? '';
+      _tradeDateTimeController.text = _currentFriend!.tradeDateTime?.toString() ?? '';
       _tradePlaceController.text = _currentFriend!.tradePlace ?? '';
 
       _isLucky = _currentFriend!.lucky == 1;
@@ -261,8 +261,10 @@ class _AddFriendPageState extends State<AddFriendPage> {
   }
 
   DateTime? convertCustomFormat(String input) {
+    final localizations = AppLocalizations.of(context)!;
+    final String formatString = localizations.dateTimeFormat;
     // 入力形式に完全に一致するDateFormatオブジェクトを作成
-    DateFormat format = DateFormat("yyyy/MM/dd HH:mm");
+    DateFormat format = DateFormat(formatString);
 
     try {
       // parseStrict: true を指定すると、形式が厳密にチェックされます
