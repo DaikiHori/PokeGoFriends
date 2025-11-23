@@ -74,7 +74,8 @@ class DbHelper {
     // バージョンが1から2に上がった場合
     if (oldVersion < 2) {
       // 新しいカラムを追加する場合
-      await db.execute("ALTER TABLE $_tableName ADD COLUMN tradeDateTime TEXT, ADD COLUMN tradePlace TEXT");
+      await db.execute("ALTER TABLE $_tableName ADD COLUMN tradeDateTime TEXT");
+      await db.execute("ALTER TABLE $_tableName ADD COLUMN tradePlace TEXT");
     }
   }
 
